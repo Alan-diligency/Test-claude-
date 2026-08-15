@@ -25,6 +25,11 @@ def run(message: str) -> int:
     except (anthropic.APIStatusError, anthropic.APIConnectionError) as e:
         print(f"Failed to create session: {e}", file=sys.stderr)
         return 1
+    except TypeError as e:
+        # The SDK raises a bare TypeError (not an APIError subclass) when no
+        # credentials can be resolved (no API key, auth token, or profile).
+        print(f"Failed to create session: {e}", file=sys.stderr)
+        return 1
 
     print(f"Session: {session.id}", file=sys.stderr)
 
